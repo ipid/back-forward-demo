@@ -1,10 +1,15 @@
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue'
-import { ElCard, ElCheckbox } from 'element-plus';
+import { ComputedRef, Ref, computed, ref } from 'vue'
 
 const selectedNum = ref(0)
 
-const foods = reactive([
+interface Food {
+  name: string
+  keyword: string
+  selected: boolean
+}
+
+const foods = ref<Food[]>([
   {
     name: '鸡腿堡',
     keyword: '鸡腿堡|jituibao|jtb',
@@ -45,37 +50,20 @@ const foods = reactive([
     keyword: '拿铁咖啡|natiekafei|ntkf|latiekafei|ltkf',
     selected: false,
   },
-])
+]) as Ref<Food[]>
 
 const filterText = ref('')
 const displayFoods = computed(() => {
   const text = filterText.value.trim()
   if (text.length === 0) {
-    return foods
+    return foods.value
   }
 
-  return foods.filter((f) => f.keyword.includes(text))
+  return foods.value.filter((f) => f.keyword.includes(text))
 })
 
 function handleCheckboxChange() {
-  selectedNum.value = foods.filter((m) => m.selected).length
-}
-
-function handleCardClicked(ev: MouseEvent) {
-  const container = ev.currentTarget
-  if (!(container instanceof HTMLElement)) {
-    return
-  }
-
-  const target = ev.target
-  if (!(target instanceof HTMLElement)) {
-    return
-  }
-
-  const checkbox = container.querySelector('input[type="checkbox"]') as (HTMLInputElement | null)
-  if (checkbox != null && target.closest('.food__card__checkbox') == null) {
-    checkbox.click()
-  }
+  selectedNum.value = foods.value.filter((m) => m.selected).length
 }
 </script>
 
@@ -83,7 +71,7 @@ function handleCardClicked(ev: MouseEvent) {
   <div class="food__container">
     <div>已选中 {{ selectedNum }} 个餐品</div>
     <br />
-    <el-card class="food__card" v-for="(m, index) in displayFoods" :key="index" @click="handleCardClicked">
+    <el-card class="food__card" v-for="(m, index) in displayFoods" :key="index">
       <div class="food__card__checkbox">
         <el-checkbox v-model="m.selected" :label="m.name" @change="handleCheckboxChange" />
       </div>

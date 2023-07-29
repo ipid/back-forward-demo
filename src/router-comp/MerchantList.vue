@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { ElCard, ElCheckbox } from 'element-plus';
 
 const selectedNum = ref(0)
 
@@ -46,30 +45,13 @@ const merchants = reactive([
 function handleCheckboxChange() {
   selectedNum.value = merchants.filter((m) => m.selected).length
 }
-
-function handleCardClicked(ev: MouseEvent) {
-  const container = ev.currentTarget
-  if (!(container instanceof HTMLElement)) {
-    return
-  }
-
-  const target = ev.target
-  if (!(target instanceof HTMLElement)) {
-    return
-  }
-
-  const checkbox = container.querySelector('input[type="checkbox"]') as (HTMLInputElement | null)
-  if (checkbox != null && target.closest('.merchant__card__checkbox') == null) {
-    checkbox.click()
-  }
-}
 </script>
 
 <template>
   <div class="merchant__container">
     <div>已选中 {{ selectedNum }} 个商家</div>
     <br />
-    <el-card class="merchant__card" v-for="(m, index) in merchants" :key="index" @click="handleCardClicked">
+    <el-card class="merchant__card" v-for="(m, index) in merchants" :key="index">
       <div class="merchant__card__checkbox">
         <el-checkbox v-model="m.selected" :label="m.name" @change="handleCheckboxChange" />
       </div>

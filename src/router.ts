@@ -1,11 +1,12 @@
-import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteConfig } from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import Empty from './router-comp/Empty.vue'
 import Blacklist from './router-comp/Blacklist.vue'
 import FoodList from './router-comp/FoodList.vue'
 import MerchantList from './router-comp/MerchantList.vue'
 
-const routes: Array<RouteRecordRaw> = [
+const routes: RouteConfig[] = [
   {
     path: '/',
     component: Empty,
@@ -26,8 +27,8 @@ const routes: Array<RouteRecordRaw> = [
   },
 ]
 
-export const router = createRouter({
-  // 为了易于部署，使用 hash 模式，可以修改。
-  history: createWebHashHistory(),
+Vue.use(VueRouter)
+
+export default new VueRouter({
   routes,
 })
